@@ -1,8 +1,8 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
+//const React = require('react');
+//const ReactDOM = require('react-dom');
 
 
-WordType = {
+const WordType = {
     NOUN: 0,
     VERB: 1,
     ADJECTIVE: 2,
@@ -12,7 +12,7 @@ WordType = {
 
 
 // Preceded by "Please enter "
-WordTypeDesc = {
+const WordTypeDesc = {
     0: 'a noun',
     1: 'a verb',
     2: 'an adjective',
@@ -65,9 +65,9 @@ class FillInTheBlank extends React.Component {
 
 
 class Story extends React.Component {
-    constructor() {
-        super();
-        this.setState({ completedStory: null });
+    constructor(props) {
+        super(props);
+        this.state = { completedStory: null };
     }
     render() {
         return (
@@ -78,6 +78,16 @@ class Story extends React.Component {
 
 
 class MadLibzGame extends React.Component {
+    constructor(props) {
+        super(props);
+
+        // initialize user's inputs to null
+        let words = this.props.blanks.map(function(b, index) {
+            return { id: b.id, value: null };
+        });
+        this.setState({ words: words });
+    }
+
     render() {
         const blanks = this.props.blanks.map(function(b, index) {
             return (
