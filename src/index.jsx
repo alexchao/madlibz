@@ -148,20 +148,6 @@ class MadLibzGame extends React.Component {
         );
     }
 
-    buildStory() {
-        var story = this.props.storyTemplate;
-        Object.keys(this.state.words).forEach(function(id) {
-            let value = this.state.words[id];
-            if (value === null) {
-                throw new Error(`Not all words filled in. Can't build story.`);
-            }
-            story = story.replace(
-                new RegExp('<<' + id + '>>', 'g'),
-                `<strong>${value}</strong>`);
-        }, this);
-        return story;
-    }
-
     componentDidUpdate() {
         if (this.state.toDoBlanks.length > 0) {
             return;
