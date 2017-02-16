@@ -32,6 +32,15 @@ const isValidWord = function(s) {
 };
 
 
+class DoneBlank extends React.Component {
+    render() {
+        return (
+            <div>{this.props.value}</div>
+        );
+    }
+}
+
+
 class FillInTheBlank extends React.Component {
     constructor(props) {
         super(props);
@@ -69,51 +78,67 @@ class MadLibzGame extends React.Component {
         this.props.blanks.forEach(function(el) {
             words[el.id] = null;
         });
-        this.state = { words: words };
+
+        // represent blanks as a queue
+        let toDoBlanks = this.props.blanks.slice();
+        let doneBlanks = [];
+        this.state = {
+            words: words,
+            toDoBlanks: toDoBlanks,
+            doneBlanks: doneBlanks
+        };
     }
 
     handleSubmit(id, value) {
         if (isValidWord(value)) {
             // record value and move on
             let newWords = Object.assign({}, this.state.words, { [id]: value });
-            this.setState({ words: newWords });
+            let newToDoBlanks = this.state.toDoBlanks.slice();
+            let doneBlank = newToDoBlanks.shift();
+            let newDoneBlanks = this.state.doneBlanks.slice();
+            newDoneBlanks.push(doneBlank);
+            this.setState({
+                words: newWords,
+                toDoBlanks: newToDoBlanks,
+                doneBlanks: newDoneBlanks
+            });
         } else {
             // show an error message
         }
     }
 
     render() {
-        var that = this;
-        var foundUnfilled = false;
-        const blanks = this.props.blanks.map(function(b, index) {
-            if (!that.state.words[b.id]) {
-                foundUnfilled = true;
-                return (
-                    <li key={b.id}>
-                        <FillInTheBlank
-                         id={b.id}
-                         wordType={b.wordType}
-                         handleSubmit={that.handleSubmit.bind(that)}
-                        />
-                    </li>
-                );
-            } else {
-                return (
-                    <li key={b.id}>{that.state.words[b.id]}</li>
-                );
-            }
-        });
+        const doneBlanks = this.state.doneBlanks.map(function(b) {
+            return (
+                <li key={b.id}>
+                    <DoneBlank value={this.state.words[b.id]} />
+                </li>
+            );
+        }, this);
+        
+        var currentBlank = (<div></div>);
+        if (this.state.toDoBlanks.length > 0) {
+            let blankData = this.state.toDoBlanks[0];
+            currentBlank = (
+                <FillInTheBlank
+                 id={blankData.id}
+                 wordType={blankData.wordType}
+                 handleSubmit={this.handleSubmit.bind(this)}
+                />
+            );
+        }
 
         var story = '';
-        if (!foundUnfilled) {
+        if (this.state.toDoBlanks.length === 0) {
             story = this.buildStory();
         }
 
         return (
             <div>
                 <ol>
-                    {blanks}
+                    {doneBlanks}
                 </ol>
+                <div>{currentBlank}</div>
                 <div>{story}</div>
             </div>
         );
