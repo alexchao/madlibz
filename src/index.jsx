@@ -88,7 +88,7 @@ class MadLibzGame extends React.Component {
     handleSubmit(id, value) {
         if (isValidWord(value)) {
             // record value and move on
-            let newWords = Object.assign({}, this.state.words, { id: value });
+            let newWords = Object.assign({}, this.state.words, { [id]: value });
             this.setState({ words: newWords });
         } else {
             // show an error message
