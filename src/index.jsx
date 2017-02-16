@@ -56,12 +56,19 @@ class FillInTheBlank extends React.Component {
         this.props.handleSubmit(this.props.id, this.state.value);
     }
 
+    componentDidMount() {
+        this.inputElement.focus();
+    }
+
     render() {
         let desc = `Please enter ${WordTypeDesc[this.props.wordType]}.`;
         return (
             <form onSubmit={(e) => this.handleSubmit(e)}>
                 <p>{desc}</p>
-                <input onChange={(e) => this.handleChange(e)} />
+                <input
+                 onChange={(e) => this.handleChange(e)}
+                 ref={(inputElement) => { this.inputElement = inputElement; }}
+                 />
                 <button type="submit">Submit</button>
             </form>
         );
@@ -124,6 +131,7 @@ class MadLibzGame extends React.Component {
                  id={blankData.id}
                  wordType={blankData.wordType}
                  handleSubmit={this.handleSubmit.bind(this)}
+                 key={blankData.id}
                 />
             );
         }
