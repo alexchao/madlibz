@@ -11,8 +11,14 @@ body {
 	font-size: 1.5em;
 	margin: 0 0 1.5em;
 }
-.wordForm p {
+.wordForm p.desc {
+	margin: 0 0 0.5em;
+}
+.wordForm p.examples {
 	margin: 0 0 1em;
+	font-size: 0.8em;
+	color: #909090;
+	font-style: italic;
 }
 .wordForm button {
 	display: none;

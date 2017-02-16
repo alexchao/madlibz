@@ -7,17 +7,47 @@ const WordType = {
     VERB: 1,
     ADJECTIVE: 2,
     ADVERB: 3,
-    CELEBRITY: 4
+    CELEBRITY: 4,
+    NONCOUNTABLE_NOUN: 5,
+    PROFESSION: 6
 };
 
-
-// Preceded by "Enter "
-const WordTypeDesc = {
-    0: 'a noun',
-    1: 'a verb',
-    2: 'an adjective',
-    3: 'an adverb',
-    4: 'the name of a celebrity'
+/**
+ * WordType metadata
+ * desc:     preceded by "Enter "
+ * examples: provide some examples for the user if the word type is not
+ *           straightforward. don't provide examples for everything, lest
+ *           the user be influenced.
+ */
+const WordTypeMeta = {
+    0: {
+        desc: 'a noun',
+        examples: []
+    },
+    1: {
+        desc: 'a verb',
+        examples: []
+    },
+    2: {
+        desc: 'an adjective',
+        examples: []
+    },
+    3: {
+        desc: 'an adverb',
+        examples: []
+    },
+    4: {
+        desc: 'the name of a celebrity',
+        examples: []
+    },
+    5: {
+        desc: 'a non-countable noun',
+        examples: ['bravery', 'coffee', 'money', 'gravity']
+    },
+    6: {
+        desc: 'a profession',
+        examples: []
+    },
 };
 
 
@@ -61,10 +91,18 @@ class FillInTheBlank extends React.Component {
     }
 
     render() {
-        let desc = `Enter ${WordTypeDesc[this.props.wordType]}.`;
+        let meta = WordTypeMeta[this.props.wordType];
+        let desc = `Enter ${meta.desc}.`;
+        let examples = ' ';
+        if (meta.examples.length > 0) {
+            let x = meta.examples.slice();
+            x.push('etc.');
+            examples = x.join(', ');
+        }
         return (
             <form onSubmit={(e) => this.handleSubmit(e)}>
-                <p>{desc}</p>
+                <p className="desc">{desc}</p>
+                <p className="examples">{examples}</p>
                 <input
                  onChange={(e) => this.handleChange(e)}
                  ref={(inputElement) => { this.inputElement = inputElement; }}
@@ -185,25 +223,29 @@ class MadLibzGame extends React.Component {
 }
 
 
+// TODO: allow game to start with multiple templates that the user can choose from
 const storyTitle = "On the Latest Episode of Waking Up with Sam Harris...";
 const storyTemplate = (<div id="story">Sam Harris
  invited <span className="celebrity_1"></span> as a guest on his
  podcast, where they discussed the controversy
- surrounding <span className="noun_1"></span>. At
+ surrounding <span className="noncountable_1"></span>. At
  one point, they entered into a <span className="adjective_1"></span> debate,
- when <span className="celebrity_1"></span> said he believes
+ when <span className="celebrity_1"></span> asserted
  that <span className="noun_2"></span> is a force
  for <span className="noun_3"></span> in peoples'
  lives. Sam reacted <span className="adverb_1"></span> to this remark,
- remaining speechless for several seconds and gazing bemusedly at this guest.</div>);
+ remaining <span className="adjective_2"></span> for several seconds and
+ gazing <span className="adverb_2"></span> at this guest.</div>);
 
 const blanks = [
     { id: 'celebrity_1', wordType: WordType.CELEBRITY },
-    { id: 'noun_1', wordType: WordType.NOUN },
+    { id: 'noncountable_1', wordType: WordType.NONCOUNTABLE_NOUN },
     { id: 'adjective_1', wordType: WordType.ADJECTIVE },
-    { id: 'noun_2', wordType: WordType.NOUN },
-    { id: 'noun_3', wordType: WordType.NOUN },
-    { id: 'adverb_1', wordType: WordType.ADVERB }
+    { id: 'noun_2', wordType: WordType.NONCOUNTABLE_NOUN },
+    { id: 'noun_3', wordType: WordType.NONCOUNTABLE_NOUN },
+    { id: 'adverb_1', wordType: WordType.ADVERB },
+    { id: 'adjective_2', wordType: WordType.ADJECTIVE },
+    { id: 'adverb_2', wordType: WordType.ADVERB },
 ];
 
 
