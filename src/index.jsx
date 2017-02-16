@@ -154,6 +154,7 @@ class MadLibzGame extends React.Component {
         }
 
         const storyEl = document.getElementById('story');
+        storyEl.className = '';
         Object.keys(this.state.words).forEach(function(id) {
             let value = this.state.words[id];
             if (value === null) {
@@ -169,7 +170,7 @@ class MadLibzGame extends React.Component {
 }
 
 
-const storyTemplate = (<div id="story">Sam Harris once
+const storyTemplate = (<div id="story" className="hiddenStory">Sam Harris once
  invited <span className="celebrity_1"></span> as a guest on his
  podcast, where they discussed the controversy
  surrounding <span className="noun_1"></span>. At
