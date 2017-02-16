@@ -110,7 +110,7 @@ class MadLibzGame extends React.Component {
                 );
             } else {
                 return (
-                    <li key={b.id}></li>
+                    <li key={b.id}>{that.state.words[b.id]}</li>
                 );
             }
         });
