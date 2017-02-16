@@ -77,6 +77,7 @@ class FillInTheBlank extends React.Component {
 
 
 class MadLibzGame extends React.Component {
+
     constructor(props) {
         super(props);
 
@@ -131,14 +132,9 @@ class MadLibzGame extends React.Component {
                  id={blankData.id}
                  wordType={blankData.wordType}
                  handleSubmit={this.handleSubmit.bind(this)}
-                 key={blankData.id}
+                 key={blankData.id} // required for React to tell these apart
                 />
             );
-        }
-
-        var story = '';
-        if (this.state.toDoBlanks.length === 0) {
-            story = this.buildStory();
         }
 
         return (
@@ -147,7 +143,7 @@ class MadLibzGame extends React.Component {
                     {doneBlanks}
                 </ol>
                 <div>{currentBlank}</div>
-                <div>{story}</div>
+                <div>{this.props.storyTemplate}</div>
             </div>
         );
     }
@@ -165,15 +161,38 @@ class MadLibzGame extends React.Component {
         }, this);
         return story;
     }
+
+    componentDidUpdate() {
+        if (this.state.toDoBlanks.length > 0) {
+            return;
+        }
+
+        const storyEl = document.getElementById('story');
+        Object.keys(this.state.words).forEach(function(id) {
+            let value = this.state.words[id];
+            if (value === null) {
+                throw new Error(`Word ${id} not filled in. Can't build story.`);
+            }
+            let occurrences = storyEl.getElementsByClassName(id);
+            // occurrences is an `HTMLCollection`
+            for (let i = 0; i < occurrences.length; i++) {
+                occurrences[i].innerHTML = value;
+            }
+        }, this);
+    }
 }
 
 
-const storyTemplate = `Sam Harris once invited <<celebrity_1>> as a guest on his
- podcast, where they discussed the controversy surrounding <<noun_1>>. At
- one point, they entered into a <<adjective_1>> debate, when <<celebrity_1>>
- said he believes that <<noun_2>> is a force for <<noun_3>> in peoples'
- lives. Sam reacted <<adverb_1>> to this remark, remaining speechless
- for several seconds and gazing bemusedly at this guest.`;
+const storyTemplate = (<div id="story">Sam Harris once
+ invited <span className="celebrity_1"></span> as a guest on his
+ podcast, where they discussed the controversy
+ surrounding <span className="noun_1"></span>. At
+ one point, they entered into a <span className="adjective_1"></span> debate,
+ when <span className="celebrity_1"></span> said he believes
+ that <span className="noun_2"></span> is a force
+ for <span className="noun_3"></span> in peoples'
+ lives. Sam reacted <span className="adverb_1"></span> to this remark,
+ remaining speechless for several seconds and gazing bemusedly at this guest.</div>);
 
 const blanks = [
     { id: 'celebrity_1', wordType: WordType.CELEBRITY },
