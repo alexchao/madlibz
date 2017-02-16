@@ -33,32 +33,28 @@ const isValidWord = function(s) {
 
 
 class FillInTheBlank extends React.Component {
-    constructor() {
-        super();
-        this.setState({
-            value: null
-        });
+    constructor(props) {
+        super(props);
+        this.state = { value: null };
+    }
+
+    handleChange(e) {
+        this.setState({ value: e.target.value });
     }
 
     handleSubmit(e) {
         e.preventDefault();
-        let word = e.target.value;
-        if (isValidWord(word)) {
-            // record value and move on
-            // TODO: probably need to do this at the MadLibzGame level
-        }
+        this.props.handleSubmit(this.props.id, this.state.value);
     }
 
     render() {
-        let inputId = 'id-' + this.props.id;
+        let desc = `Please enter ${WordTypeDesc[this.props.wordType]}.`;
         return (
-            <li>
-                <form onSubmit={this.handleSubmit}>
-                    <p>Please enter {this.props.desc}</p>
-                    <input id={inputId} />
-                    <button type="submit">Submit</button>
-                </form>
-            </li>
+            <form onSubmit={(e) => this.handleSubmit(e)}>
+                <p>{desc}</p>
+                <input onChange={(e) => this.handleChange(e)} />
+                <button type="submit">Submit</button>
+            </form>
         );
     }
 }
@@ -82,20 +78,41 @@ class MadLibzGame extends React.Component {
         super(props);
 
         // initialize user's inputs to null
-        let words = this.props.blanks.map(function(b, index) {
-            return { id: b.id, value: null };
+        let words = {};
+        this.props.blanks.forEach(function(el) {
+            words[el.id] = null;
         });
-        this.setState({ words: words });
+        this.state = { words: words };
+    }
+
+    handleSubmit(id, value) {
+        if (isValidWord(value)) {
+            // record value and move on
+            let newWords = Object.assign({}, this.state.words, { id: value });
+            this.setState({ words: newWords });
+        } else {
+            // show an error message
+        }
     }
 
     render() {
+        var that = this;
         const blanks = this.props.blanks.map(function(b, index) {
-            return (
-                <FillInTheBlank
-                 id={b.id}
-                 wordType={b.wordType}
-                />
-            );
+            if (!that.state.words[b.id]) {
+                return (
+                    <li key={b.id}>
+                        <FillInTheBlank
+                         id={b.id}
+                         wordType={b.wordType}
+                         handleSubmit={that.handleSubmit.bind(that)}
+                        />
+                    </li>
+                );
+            } else {
+                return (
+                    <li key={b.id}></li>
+                );
+            }
         });
 
         return (
@@ -112,12 +129,12 @@ class MadLibzGame extends React.Component {
 }
 
 
-const storyTemplate = `Sam Harris once invited <<celebrity_1>> to talk on his
-    podcast, where they discussed the controversy surrounding <<noun_1>>. At
-    one point, they entered into a <<adjective_1>> debate, when <<celebrity_1>>
-    said he believes that <<noun_2>> is a force for <<noun_3>> in peoples'
-    lives. Sam's reacted <<adverb_1>> to this remark, remaining speechless
-    for several seconds and gazing bemusedly at this guest.`
+const storyTemplate = `Sam Harris once invited <<celebrity_1>> as a guest on his
+ podcast, where they discussed the controversy surrounding <<noun_1>> At
+ one point, they entered into a <<adjective_1>> debate, when <<celebrity_1>>
+ said he believes that <<noun_2>> is a force for <<noun_3>> in peoples'
+ lives. Sam's reacted <<adverb_1>> to this remark, remaining speechless
+ for several seconds and gazing bemusedly at this guest.`;
 
 const blanks = [
     { id: 'celebrity_1', wordType: WordType.CELEBRITY },
