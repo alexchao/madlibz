@@ -1,6 +1,43 @@
-#story span {
-	font-weight: bold;
+body {
+	font-family: "Open Sans",Arial,sans-serif;
 }
-.hiddenStory {
+#madlibz {
+	width: 500px;
+	margin: 0 auto;
+	padding: 5em 0 0;
+}
+.wordForm {
+	text-align: center;
+	font-size: 1.5em;
+	margin: 0 0 1.5em;
+}
+.wordForm p {
+	margin: 0 0 1em;
+}
+.wordForm button {
 	display: none;
+}
+.wordForm input {
+	width: 10em;
+	padding: 0.3em;
+	font-size: 1em;
+}
+.done-blank {
+	text-align: center;
+	font-size: 1.2em;
+	line-height: 1.5em;
+}
+.finished-story h2 {
+	text-align: center;
+	font-size: 2em;
+	font-style: italic;
+	line-height: 1.3em;
+	margin: 0 0 1em;
+}
+.finished-story p {
+	font-size: 1.5em;
+	line-height: 1.5em;
+}
+.finished-story span {
+	font-weight: bold;
 }

@@ -11,7 +11,7 @@ const WordType = {
 };
 
 
-// Preceded by "Please enter "
+// Preceded by "Enter "
 const WordTypeDesc = {
     0: 'a noun',
     1: 'a verb',
@@ -61,7 +61,7 @@ class FillInTheBlank extends React.Component {
     }
 
     render() {
-        let desc = `Please enter ${WordTypeDesc[this.props.wordType]}.`;
+        let desc = `Enter ${WordTypeDesc[this.props.wordType]}.`;
         return (
             <form onSubmit={(e) => this.handleSubmit(e)}>
                 <p>{desc}</p>
@@ -118,7 +118,7 @@ class MadLibzGame extends React.Component {
     render() {
         const doneBlanks = this.state.doneBlanks.map(function(b) {
             return (
-                <li key={b.id}>
+                <li key={b.id} className="done-blank">
                     <DoneBlank value={this.state.words[b.id]} />
                 </li>
             );
@@ -137,24 +137,34 @@ class MadLibzGame extends React.Component {
             );
         }
 
+        if (this.isDone()) {
+            return (
+                <div className="finished-story">
+                    <h2>{this.props.storyTitle}</h2>
+                    <p>{this.props.storyTemplate}</p>
+                </div>
+            );
+        }
+
         return (
             <div>
+                <div className="wordForm">{currentBlank}</div>
                 <ol>
                     {doneBlanks}
                 </ol>
-                <div>{currentBlank}</div>
-                <div>{this.props.storyTemplate}</div>
             </div>
         );
     }
 
     componentDidUpdate() {
-        if (this.state.toDoBlanks.length > 0) {
+        if (!this.isDone()) {
             return;
         }
 
         const storyEl = document.getElementById('story');
-        storyEl.className = '';
+        if (!storyEl) {
+            throw new Error('Could not find story template');
+        }
         Object.keys(this.state.words).forEach(function(id) {
             let value = this.state.words[id];
             if (value === null) {
@@ -163,14 +173,20 @@ class MadLibzGame extends React.Component {
             let occurrences = storyEl.getElementsByClassName(id);
             // occurrences is an `HTMLCollection`
             for (let i = 0; i < occurrences.length; i++) {
+                // TODO: escape this value
                 occurrences[i].innerHTML = value;
             }
         }, this);
     }
+
+    isDone() {
+        return this.state.toDoBlanks.length === 0;
+    }
 }
 
 
-const storyTemplate = (<div id="story" className="hiddenStory">Sam Harris once
+const storyTitle = "On the Latest Episode of Waking Up with Sam Harris...";
+const storyTemplate = (<div id="story">Sam Harris
  invited <span className="celebrity_1"></span> as a guest on his
  podcast, where they discussed the controversy
  surrounding <span className="noun_1"></span>. At
@@ -191,4 +207,4 @@ const blanks = [
 ];
 
 
-ReactDOM.render(<MadLibzGame blanks={blanks} storyTemplate={storyTemplate} />, document.getElementById('madlibz'));
+ReactDOM.render(<MadLibzGame blanks={blanks} storyTitle={storyTitle} storyTemplate={storyTemplate} />, document.getElementById('madlibz'));
