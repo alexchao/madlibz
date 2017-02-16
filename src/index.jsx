@@ -60,19 +60,6 @@ class FillInTheBlank extends React.Component {
 }
 
 
-class Story extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { completedStory: null };
-    }
-    render() {
-        return (
-            <div>{this.state.completedStory}</div>
-        );
-    }
-}
-
-
 class MadLibzGame extends React.Component {
     constructor(props) {
         super(props);
@@ -97,8 +84,10 @@ class MadLibzGame extends React.Component {
 
     render() {
         var that = this;
+        var foundUnfilled = false;
         const blanks = this.props.blanks.map(function(b, index) {
             if (!that.state.words[b.id]) {
+                foundUnfilled = true;
                 return (
                     <li key={b.id}>
                         <FillInTheBlank
@@ -115,25 +104,42 @@ class MadLibzGame extends React.Component {
             }
         });
 
+        var story = '';
+        if (!foundUnfilled) {
+            story = this.buildStory();
+        }
+
         return (
             <div>
                 <ol>
                     {blanks}
                 </ol>
-                <div>
-                    <Story template={this.props.storyTemplate} />
-                </div>
+                <div>{story}</div>
             </div>
         );
+    }
+
+    buildStory() {
+        var story = this.props.storyTemplate;
+        Object.keys(this.state.words).forEach(function(id) {
+            let value = this.state.words[id];
+            if (value === null) {
+                throw new Error(`Not all words filled in. Can't build story.`);
+            }
+            story = story.replace(
+                new RegExp('<<' + id + '>>', 'g'),
+                `<strong>${value}</strong>`);
+        }, this);
+        return story;
     }
 }
 
 
 const storyTemplate = `Sam Harris once invited <<celebrity_1>> as a guest on his
- podcast, where they discussed the controversy surrounding <<noun_1>> At
+ podcast, where they discussed the controversy surrounding <<noun_1>>. At
  one point, they entered into a <<adjective_1>> debate, when <<celebrity_1>>
  said he believes that <<noun_2>> is a force for <<noun_3>> in peoples'
- lives. Sam's reacted <<adverb_1>> to this remark, remaining speechless
+ lives. Sam reacted <<adverb_1>> to this remark, remaining speechless
  for several seconds and gazing bemusedly at this guest.`;
 
 const blanks = [
