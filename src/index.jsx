@@ -10,7 +10,9 @@ const WordType = {
     CELEBRITY: 4,
     NONCOUNTABLE_NOUN: 5,
     PROFESSION: 6,
-    ARTICLE_OF_CLOTHING: 7
+    ARTICLE_OF_CLOTHING: 7,
+    INTERJECTION: 8,
+    MENTAL_STATE: 9
 };
 
 /**
@@ -52,6 +54,14 @@ const WordTypeMeta = {
     7: {
         desc: 'an article of clothing',
         examples: []
+    },
+    8: {
+        desc: 'an interjection',
+        examples: []
+    },
+    9: {
+        desc: 'a mental state',
+        examples: ['puzzled', 'inspired', 'uninterested']
     }
 };
 
@@ -342,15 +352,24 @@ const GAME_DATA = [
         id: 'arnold',
         shortTitle: "At the Beach",
         storyTitle: "The Governator goes to the beach...",
-        storyTemplate: (<div id="story">One hot, summer day,
- Arnold Schwarzenegger was feeling especially <span className="adj_1"></span>,
+        storyTemplate: (<div id="story">
+ One <span className="adj_0"></span>,
+ summer day, Arnold Schwarzenegger was feeling
+ especially <span className="adj_1"></span>,
  so he decided to take a trip to the beach. He put on his
  swimming <span className="clothes_1"></span>, grabbed
- his <span className="noun_1"></span>, and jumped into his car.</div>),
+ his <span className="noun_1"></span>, and into the car.
+ At the beach, passers-by were <span className="ms_1"></span> to see him.
+ "<span className="int_1"></span>, it's the Governator!"
+ they screamed.
+ </div>),
         blanks: [
+            { id: 'adj_0', wordType: WordType.ADJECTIVE },
             { id: 'adj_1', wordType: WordType.ADJECTIVE },
             { id: 'clothes_1', wordType: WordType.ARTICLE_OF_CLOTHING },
-            { id: 'noun_1', wordType: WordType.NOUN }
+            { id: 'noun_1', wordType: WordType.NOUN },
+            { id: 'ms_1', wordType: WordType.MENTAL_STATE },
+            { id: 'int_1', wordType: WordType.INTERJECTION }
         ]
     }
 
