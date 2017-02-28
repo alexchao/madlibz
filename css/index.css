@@ -1,10 +1,23 @@
 body {
 	font-family: "Open Sans",Arial,sans-serif;
 }
-#madlibz {
+#main {
 	width: 500px;
 	margin: 0 auto;
-	padding: 5em 0 0;
+	padding: 3em 0 0;
+}
+#main h1 {
+	text-align: center;
+	font-weight: bold;
+	font-size: 2em;
+	margin: 0 0 1em;
+}
+#madlibz {
+}
+.game-list {
+	text-align: center;
+	font-size: 1.2em;
+	line-height: 1.5em;
 }
 .wordForm {
 	text-align: center;

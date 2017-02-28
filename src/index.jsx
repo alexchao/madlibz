@@ -9,7 +9,8 @@ const WordType = {
     ADVERB: 3,
     CELEBRITY: 4,
     NONCOUNTABLE_NOUN: 5,
-    PROFESSION: 6
+    PROFESSION: 6,
+    ARTICLE_OF_CLOTHING: 7
 };
 
 /**
@@ -48,6 +49,10 @@ const WordTypeMeta = {
         desc: 'a profession',
         examples: []
     },
+    7: {
+        desc: 'an article of clothing',
+        examples: []
+    }
 };
 
 
@@ -114,7 +119,7 @@ class FillInTheBlank extends React.Component {
 }
 
 
-class MadLibzGame extends React.Component {
+class MadLibzGameRound extends React.Component {
 
     constructor(props) {
         super(props);
@@ -223,9 +228,67 @@ class MadLibzGame extends React.Component {
 }
 
 
-// TODO: allow game to start with multiple templates that the user can choose from
-const storyTitle = "On the Latest Episode of Waking Up with Sam Harris...";
-const storyTemplate = (<div id="story">Sam Harris
+class MadLibzGame extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        // make it easier to access each game datum
+        this.allGameData = {};
+        this.props.gameData.forEach(function(datum) {
+            this.allGameData[datum.id] = datum;
+        }, this);
+
+        this.state = {
+            currentGameId: null,
+        };
+    }
+
+    handleMenuClick(e) {
+        e.preventDefault();
+        this.setState({ currentGameId: e.target.dataset.gameId });
+    }
+
+    render() {
+        if (this.state.currentGameId !== null) {
+            let gameData = this.allGameData[this.state.currentGameId];
+            return (
+                <MadLibzGameRound
+                 blanks={gameData.blanks}
+                 storyTitle={gameData.storyTitle}
+                 storyTemplate={gameData.storyTemplate}
+                />
+            );
+        }
+
+        let gameLinks = this.props.gameData.map(function(datum) {
+            return (
+                <li key={datum.id} className="game-link">
+                    <a
+                     href="#"
+                     data-game-id={datum.id}
+                     onClick={(e) => {this.handleMenuClick(e)}}
+                     >{datum.shortTitle}</a>
+                </li>
+            );
+        }, this);
+
+        return (
+            <ul className="game-list">
+                {gameLinks}
+            </ul>
+        );
+    }
+
+}
+
+const GAME_DATA = [
+
+    { // 1. wakingup
+        id: 'wakingup',
+        shortTitle: "Waking up...",
+        storyTitle: "On the Latest Episode of Waking Up with Sam Harris...",
+        storyTemplate: (<div id="story">Sam Harris
  invited <span className="celebrity_1"></span> as a guest on his
  podcast, where they discussed the controversy
  surrounding <span className="noncountable_1"></span>. At
@@ -235,18 +298,36 @@ const storyTemplate = (<div id="story">Sam Harris
  for <span className="noun_3"></span> in peoples'
  lives. Sam reacted <span className="adverb_1"></span> to this remark,
  remaining <span className="adjective_2"></span> for several seconds and
- gazing <span className="adverb_2"></span> at this guest.</div>);
+ gazing <span className="adverb_2"></span> at this guest.</div>),
+        blanks: [
+            { id: 'celebrity_1', wordType: WordType.CELEBRITY },
+            { id: 'noncountable_1', wordType: WordType.NONCOUNTABLE_NOUN },
+            { id: 'adjective_1', wordType: WordType.ADJECTIVE },
+            { id: 'noun_2', wordType: WordType.NONCOUNTABLE_NOUN },
+            { id: 'noun_3', wordType: WordType.NONCOUNTABLE_NOUN },
+            { id: 'adverb_1', wordType: WordType.ADVERB },
+            { id: 'adjective_2', wordType: WordType.ADJECTIVE },
+            { id: 'adverb_2', wordType: WordType.ADVERB }
+        ]
+    },
 
-const blanks = [
-    { id: 'celebrity_1', wordType: WordType.CELEBRITY },
-    { id: 'noncountable_1', wordType: WordType.NONCOUNTABLE_NOUN },
-    { id: 'adjective_1', wordType: WordType.ADJECTIVE },
-    { id: 'noun_2', wordType: WordType.NONCOUNTABLE_NOUN },
-    { id: 'noun_3', wordType: WordType.NONCOUNTABLE_NOUN },
-    { id: 'adverb_1', wordType: WordType.ADVERB },
-    { id: 'adjective_2', wordType: WordType.ADJECTIVE },
-    { id: 'adverb_2', wordType: WordType.ADVERB },
+    { // 2. arnold
+        id: 'arnold',
+        shortTitle: "At the Beach",
+        storyTitle: "The Governator goes to the beach...",
+        storyTemplate: (<div id="story">One hot, summer day,
+ Arnold Schwarzenegger was feeling especially <span className="adj_1"></span>,
+ so he decided to take a trip to the beach. He put on his
+ swimming <span className="clothes_1"></span>, grabbed
+ his <span className="noun_1"></span>, and jumped into his car.</div>),
+        blanks: [
+            { id: 'adj_1', wordType: WordType.ADJECTIVE },
+            { id: 'clothes_1', wordType: WordType.ARTICLE_OF_CLOTHING },
+            { id: 'noun_1', wordType: WordType.NOUN }
+        ]
+    }
+
 ];
 
 
-ReactDOM.render(<MadLibzGame blanks={blanks} storyTitle={storyTitle} storyTemplate={storyTemplate} />, document.getElementById('madlibz'));
+ReactDOM.render(<MadLibzGame gameData={GAME_DATA} />, document.getElementById('madlibz'));
