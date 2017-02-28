@@ -214,7 +214,8 @@ class MadLibzGameRound extends React.Component {
                 throw new Error(`Word ${id} not filled in. Can't build story.`);
             }
             let occurrences = storyEl.getElementsByClassName(id);
-            // occurrences is an `HTMLCollection`
+            // occurrences is an `HTMLCollection`, which is not exactly
+            // an array
             for (let i = 0; i < occurrences.length; i++) {
                 // TODO: escape this value
                 occurrences[i].innerHTML = value;
