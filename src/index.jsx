@@ -274,9 +274,12 @@ class MadLibzGame extends React.Component {
         }, this);
 
         return (
-            <ul className="game-list">
-                {gameLinks}
-            </ul>
+            <div className="game-list-container">
+                <p>Pick a story...</p>
+                <ul className="game-list">
+                    {gameLinks}
+                </ul>
+            </div>
         );
     }
 

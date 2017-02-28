@@ -14,6 +14,12 @@ body {
 }
 #madlibz {
 }
+.game-list-container p {
+	font-size: 1.2em;
+	line-height: 1.5em;
+	font-style: italic;
+	text-align: center;
+}
 .game-list {
 	text-align: center;
 	font-size: 1.2em;
