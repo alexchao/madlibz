@@ -159,6 +159,18 @@ class MadLibzGameRound extends React.Component {
     }
 
     render() {
+        if (this.isDone()) {
+            // TODO: currently, the word substitutions are done only after
+            // the template has been inserted into the DOM, which could
+            // result in a flash of content.
+            return (
+                <div className="finished-story">
+                    <h2>{this.props.storyTitle}</h2>
+                    <p>{this.props.storyTemplate}</p>
+                </div>
+            );
+        }
+
         const doneBlanks = this.state.doneBlanks.map(function(b) {
             return (
                 <li key={b.id} className="done-blank">
@@ -177,15 +189,6 @@ class MadLibzGameRound extends React.Component {
                  handleSubmit={this.handleSubmit.bind(this)}
                  key={blankData.id} // required for React to tell these apart
                 />
-            );
-        }
-
-        if (this.isDone()) {
-            return (
-                <div className="finished-story">
-                    <h2>{this.props.storyTitle}</h2>
-                    <p>{this.props.storyTemplate}</p>
-                </div>
             );
         }
 
@@ -229,6 +232,10 @@ class MadLibzGameRound extends React.Component {
 }
 
 
+/**
+ * A basic container for the game. Only tracks which game is active
+ * and renders the list of stories to play.
+ */
 class MadLibzGame extends React.Component {
 
     constructor(props) {
