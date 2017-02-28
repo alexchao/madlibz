@@ -158,6 +158,11 @@ class MadLibzGameRound extends React.Component {
         }
     }
 
+    handleResetGame(e) {
+        e.preventDefault();
+        this.props.handleResetGame();
+    }
+
     render() {
         if (this.isDone()) {
             // TODO: currently, the word substitutions are done only after
@@ -167,6 +172,12 @@ class MadLibzGameRound extends React.Component {
                 <div className="finished-story">
                     <h2>{this.props.storyTitle}</h2>
                     <p>{this.props.storyTemplate}</p>
+                    <p className="reset-link">
+                        <a
+                         href="#"
+                         onClick={(e) => {this.handleResetGame(e)}}
+                         >Play again</a>
+                    </p>
                 </div>
             );
         }
@@ -257,6 +268,10 @@ class MadLibzGame extends React.Component {
         this.setState({ currentGameId: e.target.dataset.gameId });
     }
 
+    resetGame() {
+        this.setState({ currentGameId: null });
+    }
+
     render() {
         if (this.state.currentGameId !== null) {
             let gameData = this.allGameData[this.state.currentGameId];
@@ -265,6 +280,7 @@ class MadLibzGame extends React.Component {
                  blanks={gameData.blanks}
                  storyTitle={gameData.storyTitle}
                  storyTemplate={gameData.storyTemplate}
+                 handleResetGame={this.resetGame.bind(this)}
                 />
             );
         }

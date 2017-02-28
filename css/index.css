@@ -4,7 +4,7 @@ body {
 #main {
 	width: 500px;
 	margin: 0 auto;
-	padding: 3em 0 0;
+	padding: 3em 0 3em;
 }
 #main h1 {
 	text-align: center;
@@ -62,7 +62,11 @@ body {
 .finished-story p {
 	font-size: 1.5em;
 	line-height: 1.5em;
+	margin: 0 0 1em;
 }
 .finished-story span {
 	font-weight: bold;
+}
+.finished-story p.reset-link {
+	text-align: center;
 }
